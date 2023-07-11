@@ -44,33 +44,26 @@ namespace NovoPGs.RegrasDeNegocio
         /// <param name="fimVer"></param>
         /// <returns></returns>
         public static List<string> PorcentagemDeNumDiv(ulong fimVer)
+{
+    List<ulong> listaInicial = ListaUlongQtdNumDiv(fimVer);
+    List<string> numeros = new List<string>();
+    numeros.Add("Número - Repetições - Porcentagem");
+
+    ulong maiorNum = listaInicial.Max();
+    double qtdElementosLista = listaInicial.Count;
+
+    for (ulong i = 3; i <= maiorNum; i++)
+    {
+        double contador = listaInicial.Count(n => n == i);
+        if (contador > 0)
         {
-            List<ulong> ListaInicial = ListaUlongQtdNumDiv(fimVer);
-            List<string> Numeros = new List<string>();
-            Numeros.Add("Número - Repetições - Porcentagem");
-            ulong maiorNum = ListaInicial.Max();
-            double qtdElementosLista = ListaInicial.Count();
-            double contador = 0;
-
-            for (ulong i = 3; i <= maiorNum; i++)
-            {
-                foreach (ulong element in ListaInicial)
-                {
-                    if (element == i)
-                    {
-                        contador++;
-                    }
-                }
-                if (contador > 0)
-                {
-                    Numeros.Add($"{i} - {contador} - {Math.Round(contador * 100 / qtdElementosLista, 4)}");
-
-                }
-                contador = 0;
-            }
-
-            return Numeros;
+            double porcentagem = contador * 100.0 / qtdElementosLista;
+            numeros.Add($"{i} - {contador} - {Math.Round(porcentagem, 4)}");
         }
+    }
+
+    return numeros;
+}
 
         /// <summary>
         /// Lista ulong com a quantidade de divisores dos números analisados, entre 1 e fimVerificação.
