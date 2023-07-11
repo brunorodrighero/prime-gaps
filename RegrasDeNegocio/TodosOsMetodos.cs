@@ -7,25 +7,36 @@ namespace NovoPGs.RegrasDeNegocio
     public class TodosOsMetodos
     {
         public static bool VerificarSePrimo(ulong numero)
+{
+    if (numero <= 1) 
+    {
+        return false;
+    }
+
+    if (numero == 2 || numero == 3)
+    {
+        return true;
+    }
+
+    if (numero % 2 == 0 || numero % 3 == 0)
+    {
+        return false;
+    }
+
+    ulong divisor = 5;
+    while (divisor * divisor <= numero)
+    {
+        if (numero % divisor == 0 || numero % (divisor + 2) == 0)
         {
-            ulong contador = 0;
-            double test1 = (numero + 1) / 6;
-            double test2 = (numero - 1) / 6;
-
-            if (numero < 1) return false;
-
-            if (numero == 2) return true;
-
-            if (numero > 2 && numero % 2 == 0 || numero > 3 && numero % 3 == 0 || numero > 5 && numero % 5 == 0 || numero > 7 && numero % 7 == 0 || numero > 11 && numero % 11 == 0 || numero > 13 && numero % 13 == 0 || numero > 17 && numero % 17 == 0 || numero > 19 && numero % 19 == 0 || numero > 23 && numero % 23 == 0 || numero > 29 && numero % 29 == 0 || numero > 31 && numero % 31 == 0) return false;
-            else if (test1 % 1 != 0 | test2 % 1 != 0) return false;
-            else
-            {
-                for (ulong i = 1; i <= Math.Sqrt(numero); i += 2) if (numero % i == 0) contador++;
-
-                if (contador == 1) return true;
-                else return false;
-            }
+            return false;
         }
+
+        divisor += 6;
+    }
+
+    return true;
+}
+
 
         /// <summary>
         /// Verifica todos os números de divisores que ocorrem entre 1 e fimVer, conta a quantidade de cada um, finalmente retorna uma lista string com os números, qtd repetições e sua porcentagem em relação aos outros.
@@ -297,27 +308,37 @@ namespace NovoPGs.RegrasDeNegocio
         /// </summary>
         /// <param name="verificarNumeroSePrimo"></param>
         /// <returns></returns>
-        private static bool VerificarSePrimoLong(long numero)
+       public static bool VerificarSePrimo(long numero)
+{
+    if (numero <= 1) 
+    {
+        return false;
+    }
+
+    if (numero == 2 || numero == 3)
+    {
+        return true;
+    }
+
+    if (numero % 2 == 0 || numero % 3 == 0)
+    {
+        return false;
+    }
+
+    long divisor = 5;
+    while (divisor * divisor <= numero)
+    {
+        if (numero % divisor == 0 || numero % (divisor + 2) == 0)
         {
-
-            long contador = 0;
-            double test1 = (numero + 1) / 6;
-            double test2 = (numero - 1) / 6;
-
-            if (numero < 1) return false;
-
-            if (numero == 2) return true;
-
-            if (numero > 2 && numero % 2 == 0 || numero > 3 && numero % 3 == 0 || numero > 5 && numero % 5 == 0 || numero > 7 && numero % 7 == 0 || numero > 11 && numero % 11 == 0 || numero > 13 && numero % 13 == 0 || numero > 17 && numero % 17 == 0 || numero > 19 && numero % 19 == 0 || numero > 23 && numero % 23 == 0 || numero > 29 && numero % 29 == 0 || numero > 31 && numero % 31 == 0) return false;
-            else if (test1 % 1 != 0 | test2 % 1 != 0) return false;
-            else
-            {
-                for (long i = 1; i <= Math.Sqrt(numero); i += 2) if (numero % i == 0) contador++;
-
-                if (contador == 1) return true;
-                else return false;
-            }
+            return false;
         }
+
+        divisor += 6;
+    }
+
+    return true;
+}
+
 
         /// <summary>
         /// Retorna o próximo número primo em relação ao número de input. Entrada e Saida ULONG.
