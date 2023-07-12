@@ -301,7 +301,7 @@ namespace NovoPGs.RegrasDeNegocio
         /// </summary>
         /// <param name="verificarNumeroSePrimo"></param>
         /// <returns></returns>
-       public static bool VerificarSePrimo(long numero)
+       public static bool VerificarSePrimoLong‎‎(long numero)
 {
     if (numero <= 1) 
     {
