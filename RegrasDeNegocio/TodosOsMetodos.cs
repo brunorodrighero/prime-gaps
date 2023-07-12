@@ -339,17 +339,15 @@ namespace NovoPGs.RegrasDeNegocio
         /// <param name="numero"></param>
         /// <returns></returns>
         public static ulong ProximoPrimo(ulong numero)
-        {
-            bool result;
+{
+    do
+    {
+        numero++;
+    } while (!VerificarSePrimo(numero));
 
-            do
-            {
-                numero++;
-                result = VerificarSePrimo(numero);
-            } while (!result);
+    return numero;
+}
 
-            return numero;
-        }
 
         /// <summary>
         /// PRIVATE - Retorna o próximo número primo em relação ao número de input. Entrada e Saida LONG.
@@ -358,15 +356,12 @@ namespace NovoPGs.RegrasDeNegocio
         /// <returns></returns>
         private static long ProximoPrimoLong(long numero)
         {
-            bool result;
+           do
+    {
+        numero++;
+    } while (!VerificarSePrimo(numero));
 
-            do
-            {
-                numero++;
-                result = VerificarSePrimoLong(numero);
-            } while (!result);
-
-            return numero;
+    return numero;
         }
 
         /// <summary>
@@ -375,49 +370,62 @@ namespace NovoPGs.RegrasDeNegocio
         /// <param name="numero"></param>
         /// <returns></returns>
         public static ulong AnteriorPrimo(ulong numero)
-        {
-            bool result;
-            do
-            {
-                numero--;
-                result = VerificarSePrimo(numero);
-            } while (!result);
+{
+    do
+    {
+        numero--;
+    } while (!VerificarSePrimo(numero));
 
-            return numero;
-        }
+    return numero;
+}
 
         /// <summary>
-        /// Retorna uma string com os números primos entre incioVerificacao e fimVerificacao. Também indica a quantidade de primos encontrada. Entrada ULONG e Saida STRING.
+        /// Retorna o número primo anterior em relação ao número de input. Entrada e Saida LONG.
         /// </summary>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
+        /// <param name="numero"></param>
         /// <returns></returns>
-        public static string StringPrimosEmIntervalo(ulong inicioVerificacao, ulong fimVerificacao)
+        public static long AnteriorPrimoLong(long numero)
+{
+    do
+    {
+        numero--;
+    } while (!VerificarSePrimo(numero));
+
+    return numero;
+}
+
+
+      /// <summary>
+/// Retorna uma string com os números primos entre incioVerificacao e fimVerificacao. Também indica a quantidade de primos encontrada. Entrada ULONG e Saida STRING.
+/// </summary>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+public static string StringPrimosEmIntervalo(ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    if (fimVerificacao < inicioVerificacao) throw new Exception("Intervalo inválido.");
+
+    StringBuilder listaDePrimos = new StringBuilder();
+    ulong qtdPrimos = 0;
+
+    for (ulong i = inicioVerificacao; i <= fimVerificacao; i++)
+    {
+        if (VerificarSePrimo(i))
         {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
-
-            ulong intervalo = fimVerificacao - inicioVerificacao;
-            string listaDePrimos = string.Empty;
-            ulong qtdPrimos = 0;
-            if (intervalo < 1) throw new Exception("Intervalo inválido.");
-            else
-            {
-                do
-                {
-                    if (VerificarSePrimo(inicioVerificacao))
-                    {
-                        listaDePrimos += inicioVerificacao.ToString() + ", ";
-                        qtdPrimos++;
-                    }
-
-                    inicioVerificacao++;
-                } while (inicioVerificacao != fimVerificacao + 1);
-
-            }
-            string listaDePrimosFinal = listaDePrimos.Remove(listaDePrimos.Length - 2, 2);
-            listaDePrimosFinal += $". Quantidade de primos encontrada: {qtdPrimos}.";
-            return listaDePrimosFinal;
+            listaDePrimos.Append(i).Append(", ");
+            qtdPrimos++;
         }
+    }
+    
+    if(listaDePrimos.Length > 0)
+        listaDePrimos.Remove(listaDePrimos.Length - 2, 2);  // remove the trailing ", "
+
+    listaDePrimos.Append($". Quantidade de primos encontrada: {qtdPrimos}.");
+
+    return listaDePrimos.ToString();
+}
 
         /// <summary>
         /// Retorna uma string com os números primos entre incioVerificacao e fimVerificacao, mas coloca o inicio como 1. Também indica a quantidade de primos encontrada. Entrada ULONG e Saida STRING.
@@ -462,39 +470,34 @@ namespace NovoPGs.RegrasDeNegocio
         }
 
         /// <summary>
-        /// Lista os primos no referido intervalo e retorna um ARRAY LONG com seus dados.
-        /// </summary>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
-        /// <returns></returns>
-        private static long[] PrimosEmIntervalo(ulong inicioVerificacao, ulong fimVerificacao)
+/// Lista os primos no referido intervalo e retorna um ARRAY LONG com seus dados.
+/// </summary>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+private static long[] PrimosEmIntervalo(ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    ulong qtd = QtdPrimosEmIntervalo(inicioVerificacao, fimVerificacao);
+
+    long fimVer = Convert.ToInt64(fimVerificacao);
+    long inicioVer = Convert.ToInt64(inicioVerificacao);
+
+    long[] primos = new long[qtd];
+    int j = 0;
+
+    for (long i = inicioVer; i <= fimVer; i++)
+    {
+        if (VerificarSePrimoLong(i))
         {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
-
-            ulong qtd = QtdPrimosEmIntervalo(inicioVerificacao, fimVerificacao);
-
-            long fimVer = Convert.ToInt64(fimVerificacao);
-            long inicioVer = Convert.ToInt64(inicioVerificacao);
-
-            int j = 0;
-
-            long[] primos = new long[qtd];
-
-            for (long i = inicioVer; i < fimVer; i++)
-            {
-                if (i > fimVer) { }
-                else
-                {
-                    if (VerificarSePrimoLong(i))
-                    {
-                        primos[j] = i;
-                        j++;
-                    }
-                }
-            }
-
-            return primos;
+            primos[j] = i;
+            j++;
         }
+    }
+
+    return primos;
+}
 
         /// <summary>
         /// PRIVATE - Idêntico ao anterior, mas coloca o inicio como 1. Entrada: ULONG. Saída: STRING.
@@ -513,27 +516,23 @@ namespace NovoPGs.RegrasDeNegocio
         /// <param name="fimVerificacao"></param>
         /// <returns></returns>
         public static ulong QtdPrimosEmIntervalo(ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    if (fimVerificacao < inicioVerificacao) throw new Exception("Intervalo inválido.");
+
+    ulong qtdPrimos = 0;
+
+    for (ulong i = inicioVerificacao; i <= fimVerificacao; i++)
+    {
+        if (VerificarSePrimo(i))
         {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
-
-            ulong intervalo = fimVerificacao - inicioVerificacao;
-            ulong qtdPrimos = 0;
-            if (intervalo < 1) throw new Exception("Intervalo inválido.");
-            else
-            {
-                do
-                {
-                    if (VerificarSePrimo(inicioVerificacao))
-                    {
-                        qtdPrimos++;
-                    }
-
-                    inicioVerificacao++;
-                } while (inicioVerificacao != fimVerificacao + 1);
-            }
-
-            return qtdPrimos;
+            qtdPrimos++;
         }
+    }
+
+    return qtdPrimos;
+}
 
         /// <summary>
         /// Indica a quantidade de primos no intervalo entre 1 e o número input: fimVerificacao. Entrada e Saida ULONG.
@@ -552,27 +551,23 @@ namespace NovoPGs.RegrasDeNegocio
         /// <param name="fimVerificacao"></param>
         /// <returns></returns>
         private static long QtdPrimosEmIntervaloLong(long inicioVerificacao, long fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    if (fimVerificacao < inicioVerificacao) throw new Exception("Intervalo inválido.");
+
+    long qtdPrimos = 0;
+
+    for (long i = inicioVerificacao; i <= fimVerificacao; i++)
+    {
+        if (VerificarSePrimoLong(i))
         {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
-
-            long intervalo = fimVerificacao - inicioVerificacao;
-            long qtdPrimos = 0;
-            if (intervalo < 1) throw new Exception("Intervalo inválido.");
-            else
-            {
-                do
-                {
-                    if (VerificarSePrimoLong(inicioVerificacao))
-                    {
-                        qtdPrimos++;
-                    }
-
-                    inicioVerificacao++;
-                } while (inicioVerificacao != fimVerificacao + 1);
-            }
-
-            return qtdPrimos;
+            qtdPrimos++;
         }
+    }
+
+    return qtdPrimos;
+}
 
         /// <summary>
         /// PRIVATE - Indica a quantidade de primos no intervalo entre 1 e o número input: fimVerificacao. Entrada e Saida LONG.
@@ -585,148 +580,149 @@ namespace NovoPGs.RegrasDeNegocio
         }
 
         /// <summary>
-        /// Indica a quantidade de números não-primos existem entre dois primos indicados em inicioVerificacao e fimVerificacao. Entrada e Saida ULONG.
-        /// </summary>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
-        /// <returns></returns>
-        public static ulong QtdNumerosEntreDoisPrimos(ulong inicioVerificacao, ulong fimVerificacao)
-        {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+/// Indica a quantidade de números não-primos existem entre dois primos indicados em inicioVerificacao e fimVerificacao. Entrada e Saida ULONG.
+/// </summary>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+public static ulong QtdNumerosEntreDoisPrimos(ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
 
-            bool res1 = VerificarSePrimo(inicioVerificacao);
-            bool res2 = VerificarSePrimo(fimVerificacao);
-            ulong intervalo = 0;
-
-            if (res1 && res2)
-            {
-                return intervalo = fimVerificacao - inicioVerificacao;
-            }
-            else
-            {
-                throw new Exception("Um dos números não é primo.");
-            }
-        }
-
-        /// <summary>
-        /// Returna uma array ULONG com os valores de todos os PRIME GAPS no intervalo. Entrada e Saida ARRAY ULONG.
-        /// </summary>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
-        /// <returns></returns>
-        public static ulong[] PrimeGapsArrayUlong(ulong inicioVerificacao, ulong fimVerificacao)
-        {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
-
-            ulong[] valores = new ulong[QtdPrimosEmIntervalo(inicioVerificacao, fimVerificacao)];
-
-            ulong inicio = ProximoPrimo(inicioVerificacao);
-            ulong proximo = ProximoPrimo(inicio);
-            ulong intervalo = proximo - inicio;
-            ulong i = 1;
-
-            valores[0] = intervalo;
-
-            while (proximo < fimVerificacao)
-            {
-                inicio = proximo;
-                proximo = ProximoPrimo(inicio);
-                intervalo = proximo - inicio;
-                valores[i] = intervalo;
-                i++;
-            }
-
-            return valores;
-        }
+    if (VerificarSePrimo(inicioVerificacao) && VerificarSePrimo(fimVerificacao))
+    {
+        if (fimVerificacao < inicioVerificacao)
+            throw new Exception("O número inicial é maior que o número final.");
+        
+        return fimVerificacao - inicioVerificacao - 1;
+    }
+    else
+    {
+        throw new Exception("Um dos números não é primo.");
+    }
+}
 
         /// <summary>
-        /// PRIVATE - Returna uma array ULONG com os valores de todos os PRIME GAPS no intervalo. Entrada e Saida ARRAY LONG.
-        /// </summary>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
-        /// <returns></returns>
-        private static long[] PrimeGapsArrayLong(long inicioVerificacao, long fimVerificacao)
-        {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+/// Returna uma array ULONG com os valores de todos os PRIME GAPS no intervalo. Entrada e Saida ARRAY ULONG.
+/// </summary>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+public static ulong[] PrimeGapsArrayUlong(ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
 
-            long qtdPrimos = QtdPrimosEmIntervaloLong(inicioVerificacao, fimVerificacao) - 1;
+    List<ulong> valores = new List<ulong>();
+    ulong inicio = ProximoPrimo(inicioVerificacao);
 
-            long[] primeGap = new long[qtdPrimos];
+    while (inicio < fimVerificacao)
+    {
+        ulong proximo = ProximoPrimo(inicio + 1);
+        if(proximo > fimVerificacao)
+            break;
+        
+        ulong intervalo = proximo - inicio;
+        valores.Add(intervalo);
 
-            long inicio = ProximoPrimoLong(inicioVerificacao);
-            long proximo = ProximoPrimoLong(inicio);
-            long intervalo = proximo - inicio;
+        inicio = proximo;
+    }
 
-            primeGap[0] = intervalo;
-
-            for (long j = 1; j < qtdPrimos; j++)
-            {
-                inicio = proximo;
-                proximo = ProximoPrimoLong(inicio);
-                intervalo = proximo - inicio;
-                primeGap[j] = intervalo;
-            }
-
-            return primeGap;
-        }
+    return valores.ToArray();
+}
 
         /// <summary>
-        /// Lista em uma string somente os valores dos PRIME GAPS no intervalo selecionado. Entrada ULONG. Saida STRING.
-        /// </summary>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
-        /// <returns></returns>
-        public static string PrimeGapsString(ulong inicioVerificacao, ulong fimVerificacao)
+/// PRIVATE - Returna uma array ULONG com os valores de todos os PRIME GAPS no intervalo. Entrada e Saida ARRAY LONG.
+/// </summary>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+private static long[] PrimeGapsArrayLong(long inicioVerificacao, long fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    List<long> primeGap = new List<long>();
+    long inicio = ProximoPrimoLong(inicioVerificacao);
+
+    while (inicio < fimVerificacao)
+    {
+        long proximo = ProximoPrimoLong(inicio + 1);
+        if (proximo > fimVerificacao)
+            break;
+        
+        long intervalo = proximo - inicio;
+        primeGap.Add(intervalo);
+
+        inicio = proximo;
+    }
+
+    return primeGap.ToArray();
+}
+
+       /// <summary>
+/// Lista em uma string somente os valores dos PRIME GAPS no intervalo selecionado. Entrada ULONG. Saida STRING.
+/// </summary>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+public static string PrimeGapsString(ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    ulong[] valores = PrimeGapsArrayUlong(inicioVerificacao, fimVerificacao);
+
+    StringBuilder listaValores = new StringBuilder();
+
+    for (int i = 0; i < valores.Length; i++)
+    {
+        listaValores.Append(valores[i]);
+        if (i < valores.Length - 1)
         {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
-
-            ulong[] valores = PrimeGapsArrayUlong(inicioVerificacao, fimVerificacao);
-
-            string listaValores = string.Empty;
-
-            foreach (ulong elemento in valores)
-            {
-                listaValores += elemento + ", ";
-            }
-
-            string listaFinal = listaValores.Remove(listaValores.Length - 2, 2) + ".";
-
-            return listaFinal;
+            listaValores.Append(", ");
         }
+    }
+
+    listaValores.Append(".");
+    return listaValores.ToString();
+}
 
         /// <summary>
-        /// Retorna uma string com os números primos e entre eles os PRIME GAPS. Entrada ULONG. Saida STRING.
-        /// </summary>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
-        /// <returns></returns>
-        public static string ListaDePrimosEPrimeGaps(ulong inicioVerificacao, ulong fimVerificacao)
+/// Retorna uma string com os números primos e entre eles os PRIME GAPS. Entrada ULONG. Saida STRING.
+/// </summary>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+public static string ListaDePrimosEPrimeGaps(ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    StringBuilder lista = new StringBuilder();
+
+    ulong inicio = ProximoPrimo(inicioVerificacao);
+    ulong proximo = ProximoPrimo(inicio);
+
+    while (proximo <= fimVerificacao)
+    {
+        ulong intervalo = proximo - inicio;
+
+        lista.Append(inicio);
+        lista.Append(", (");
+        lista.Append(intervalo);
+        lista.Append("), ");
+        lista.Append(proximo);
+
+        inicio = proximo;
+        proximo = ProximoPrimo(inicio);
+
+        if (proximo <= fimVerificacao)
         {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
-
-            string lista = string.Empty;
-
-            ulong inicio = ProximoPrimo(inicioVerificacao);
-            ulong proximo = ProximoPrimo(inicio);
-            ulong intervalo = proximo - inicio;
-
-            lista += inicio + ", (" + intervalo + "), " + proximo + ", (";
-
-            while (proximo < fimVerificacao)
-            {
-                inicio = proximo;
-                proximo = ProximoPrimo(inicio);
-                intervalo = proximo - inicio;
-
-                lista += intervalo + "), " + proximo + ", (";
-            }
-
-            string listaFinal = lista.Remove(lista.Length - 3, 3);
-            listaFinal += ".";
-
-            return listaFinal;
-
+            lista.Append(", (");
         }
+    }
+
+    lista.Append(").");
+
+    return lista.ToString();
+}
 
         /// <summary>
         /// PRIVATE - Retorna a próxima linha como STRING e recebe ULONG.
@@ -979,48 +975,46 @@ namespace NovoPGs.RegrasDeNegocio
         }
 
         /// <summary>
-        /// Retorna ARRAY LONG com as distancias entre PRIME GAPS específicos. Ex: entre 1 a 100, analisando 2, lista a distancia entre cada PRIME GAP 2 presente no intervalo selecionado.
-        /// </summary>
-        /// <param name="primeGapNumero"></param>
-        /// <param name="inicioVerificacao"></param>
-        /// <param name="fimVerificacao"></param>
-        /// <returns></returns>
-        public static long[] DistanciaEntrePrimeGaps(long primeGapNumero, ulong inicioVerificacao, ulong fimVerificacao)
+/// Retorna ARRAY LONG com as distancias entre PRIME GAPS específicos. Ex: entre 1 a 100, analisando 2, lista a distancia entre cada PRIME GAP 2 presente no intervalo selecionado.
+/// </summary>
+/// <param name="primeGapNumero"></param>
+/// <param name="inicioVerificacao"></param>
+/// <param name="fimVerificacao"></param>
+/// <returns></returns>
+public static long[] DistanciaEntrePrimeGaps(long primeGapNumero, ulong inicioVerificacao, ulong fimVerificacao)
+{
+    VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+
+    long inicioVer = Convert.ToInt64(inicioVerificacao);
+    long fimVer = Convert.ToInt64(fimVerificacao);
+
+    long[] primeGaps = PrimeGapsArrayLong(inicioVer, fimVer);
+    long[] distancia = new long[QtdRepeticoesArray(primeGaps, primeGapNumero)];
+
+    long contador = 0;
+    int posicao = 0;
+
+    foreach(long gap in primeGaps)
+    {
+        if (gap == primeGapNumero)
         {
-            VerificarExceptionInput(inicioVerificacao, fimVerificacao);
+            distancia[posicao] = contador;
+            contador = 0;
+            posicao++;
 
-            long inicioVer = Convert.ToInt64(inicioVerificacao);
-            long fimVer = Convert.ToInt64(fimVerificacao);
-
-            long[] primeGaps = PrimeGapsArrayLong(inicioVer, fimVer);
-
-            long qtdPrimos = QtdPrimosEmIntervaloLong(inicioVer, fimVer);
-
-            long qtdRepeticoes = QtdRepeticoesArray(primeGaps, primeGapNumero);
-
-            long[] soDistancia = new long[qtdRepeticoes];
-
-            long contador = -1;
-            int posicao = 0;
-
-            for (long i = 0; i < qtdPrimos; i++)
+            if (posicao == distancia.Length)
             {
-                contador++;
-                if (primeGaps[i] == primeGapNumero)
-                {
-                    soDistancia[posicao] = contador;
-                    contador = -1;
-                    posicao++;
-                    if (posicao == qtdRepeticoes)
-                    {
-                        break;
-                    }
-                }
+                break;
             }
-
-            return soDistancia;
-
         }
+        else
+        {
+            contador++;
+        }
+    }
+
+    return distancia;
+}
 
         /// <summary>
         /// Indica a quantidade de vezes que um determinado número se repete no array. LONG
@@ -1079,6 +1073,5 @@ namespace NovoPGs.RegrasDeNegocio
 
             return somatorio;
         }
-
     }
 }
